@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use these diagrams, please cite as below."
+type: software
+title: "ODMR Principle Visualized"
+authors:
+  - family-names: "Ghannaj"
+    given-names: "Hafsa"
+version: "1.0.0"
+date-released: "2026-02-12"
+license: "CC-BY-4.0"
+repository-code: "https://github.com/hafsaghannaj/ODMR-Principle-Visualized"
+keywords:
+  - ODMR
+  - nitrogen-vacancy center
+  - quantum sensing
+  - diamond
+  - magnetometry
+  - spin physics
+abstract: >-
+  Publication-ready diagrams and visualizations explaining
+  Optically Detected Magnetic Resonance (ODMR) in
+  Nitrogen-Vacancy centers in diamond. Includes energy level
+  diagrams, measurement cycle workflows, Zeeman splitting
+  spectra, fluorescence contrast plots, crystal orientation
+  maps, and temperature dependence curves.
