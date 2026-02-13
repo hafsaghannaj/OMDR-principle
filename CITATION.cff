@@ -9,8 +9,8 @@ authors:
 version: "1.0.0"
 date-released: "2026-02-12"
 license: "CC-BY-4.0"
-repository-code: "https://github.com/hafsaghannaj/ODMR-Principle-Visualized"
-url: "https://github.com/hafsaghannaj/ODMR-Principle-Visualized"
+repository-code: "https://github.com/hafsaghannaj/OMDR-principle"
+url: "https://github.com/hafsaghannaj/OMDR-principle"
 keywords:
   - ODMR
   - nitrogen-vacancy center

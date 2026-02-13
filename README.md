@@ -168,7 +168,7 @@ If you use these diagrams in a publication, please cite:
   author       = {Hafsa Ghannaj},
   title        = {{ODMR Principle Visualized}},
   year         = {2026},
-  url          = {https://github.com/hafsaghannaj/ODMR-Principle-Visualized},
+  url          = {https://github.com/hafsaghannaj/OMDR-principle},
   license      = {CC-BY-4.0}
 }
 ```
