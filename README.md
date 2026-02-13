@@ -18,17 +18,21 @@ in Nitrogen-Vacancy (NV) centers in diamond.
 
 ## Figure Gallery (generated programmatically)
 
-| Figure | Filename | Generator | Description |
-|:--:|--|--|--|
-| 3 | `fig3_zeeman_splitting` | Python | Illustrative ODMR dips under B = 0, 3, 5 mT (Lorentzian dip model) |
-| 6 | `fig6_temperature_shift` | Python | Illustrative linear shift of ZFS parameter D with temperature (dD/dT) |
+### Fig 3 — Zeeman Splitting
+
+Illustrative ODMR dips under B = 0, 3, 5 mT (Lorentzian dip model).
+
+![Fig 3: Zeeman Splitting](diagrams/png/fig3_zeeman_splitting.png)
+
+### Fig 6 — Temperature Shift
+
+Illustrative linear shift of ZFS parameter D with temperature (dD/dT).
+
+![Fig 6: Temperature Shift](diagrams/png/fig6_temperature_shift.png)
 
 ### Output formats
 
-Each figure is produced as:
-- **PNG** (300 DPI)
-- **SVG**
-- **PDF**
+Each figure is produced as **PNG** (300 DPI), **SVG**, and **PDF** in `diagrams/`.
 
 Outputs are written to `diagrams/png/`, `diagrams/svg/`, `diagrams/pdf/`.
 
