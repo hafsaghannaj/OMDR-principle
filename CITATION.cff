@@ -2,14 +2,15 @@ cff-version: 1.2.0
 message: "If you use these diagrams or code, please cite as below."
 type: software
 title: "ODMR Principle Visualized"
-authors:
-  - family-names: "Ghannaj"
-    given-names: "Hafsa"
-version: "1.0.0"
+version: "0.1.0"
 date-released: "2026-02-12"
 license: "CC-BY-4.0"
 repository-code: "https://github.com/hafsaghannaj/OMDR-principle"
 url: "https://github.com/hafsaghannaj/OMDR-principle"
+authors:
+  - family-names: "Ghannaj"
+    given-names: "Hafsa"
+
 keywords:
   - ODMR
   - nitrogen-vacancy center
@@ -19,33 +20,17 @@ keywords:
   - spin physics
   - scientific visualization
   - reproducible figures
-abstract: >-
-  Publication-ready diagrams and reproducible figure-generation
-  workflows for Optically Detected Magnetic Resonance (ODMR) in
-  Nitrogen-Vacancy centers in diamond. Includes energy level
-  diagrams, measurement cycle workflows, Zeeman splitting spectra,
-  fluorescence contrast simulations, crystal orientation maps, and
-  temperature dependence curves. All figures are generated from
-  Python and TikZ source code.
-references:
-  - type: article
-    authors:
-      - family-names: "Doherty"
-        given-names: "M. W."
-    title: "The nitrogen-vacancy colour centre in diamond"
-    journal: "Physics Reports"
-    volume: "528"
-    start: "1"
-    end: "45"
-    year: 2013
-    doi: "10.1016/j.physrep.2013.02.001"
-  - type: article
-    authors:
-      - family-names: "Rondin"
-        given-names: "L."
-    title: "Magnetometry with nitrogen-vacancy defects in diamond"
-    journal: "Reports on Progress in Physics"
-    volume: "77"
-    start: "056503"
-    year: 2014
-    doi: "10.1088/0034-4885/77/5/056503"
+
+abstract: >
+  Publication-ready diagrams and reproducible figure-generation workflows for
+  Optically Detected Magnetic Resonance (ODMR) in Nitrogen-Vacancy (NV) centers
+  in diamond.
+
+preferred-citation:
+  type: software
+  authors:
+    - family-names: "Ghannaj"
+      given-names: "Hafsa"
+  title: "ODMR Principle Visualized"
+  year: 2026
+  url: "https://github.com/hafsaghannaj/OMDR-principle"

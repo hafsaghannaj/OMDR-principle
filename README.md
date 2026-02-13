@@ -1,111 +1,90 @@
 # ODMR Principle Visualized
 
-[![Figures/Docs: CC BY 4.0](https://img.shields.io/badge/Figures%2FDocs-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![Code: MIT](https://img.shields.io/badge/Code-MIT-green.svg)](LICENSE_CODE)
-[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
+Publication-ready diagrams and reproducible figure generation for **Optically Detected Magnetic Resonance (ODMR)**
+in Nitrogen-Vacancy (NV) centers in diamond.
 
-Publication-ready diagrams and reproducible figure-generation workflows for Optically Detected Magnetic Resonance (ODMR) in nitrogen-vacancy (NV) centers in diamond.
+**Repository:** https://github.com/hafsaghannaj/OMDR-principle
 
-Repository URL: https://github.com/hafsaghannaj/OMDR-principle
+---
 
-## What This Repository Contains
+## What this repository is (and is not)
 
-Current v0.1 generates two ODMR/NV figures directly from source code. The figures are intended for papers, theses, lab onboarding docs, and teaching material.
+- **Is:** a figure/diagram artifact repository intended for papers, theses, lecture slides, and lab docs.
+- **Is not:** a full ODMR analysis package or experimental control stack.
 
-Programmatically generated figures:
+---
 
-- `fig3_zeeman_splitting`: ODMR dip splitting under applied magnetic field
-- `fig6_temperature_shift`: resonance shift versus temperature
+## Figure Gallery (generated programmatically)
 
-## Repository Layout
+| Figure | Filename | Description |
+|:------:|----------|-------------|
+| 3 | `fig3_zeeman_splitting` | ODMR spectra under applied magnetic fields (0, 3, 5 mT), showing Zeeman-split resonance dips |
+| 6 | `fig6_temperature_shift` | Temperature dependence of the ODMR zero-field splitting parameter D (illustrative linear model) |
 
-```text
-.
-├── diagrams/
-│   ├── png/            # Generated PNG outputs
-│   ├── svg/            # Generated SVG outputs
-│   ├── pdf/            # Generated PDF outputs
-│   └── source/
-│       ├── tikz/       # TikZ source files (not in active build pipeline)
-│       └── drawio/     # Draw.io source files
-├── docs/               # Theory and experimental notes
-├── scripts/
-│   ├── generate_figures.py
-│   └── requirements.txt
-├── CITATION.cff
-├── LICENSE_CODE
-└── README.md
-```
-
-## Quick Start
-
-### 1) Install dependencies
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r scripts/requirements.txt
-```
-
-### 2) Generate Python-based figures
-
-```bash
-python scripts/generate_figures.py
-```
+### Output formats
+Each figure is produced as:
+- **PNG** (300 DPI)
+- **SVG**
+- **PDF**
 
 Outputs are written to:
-
 - `diagrams/png/`
 - `diagrams/svg/`
 - `diagrams/pdf/`
 
-Current supported generation workflow is Python-only via `scripts/generate_figures.py`.
+---
 
-## Expected Outputs
+## Quick Start
 
-After running `python scripts/generate_figures.py`, the following files should exist:
+### Prerequisites
+- Python **3.9+**
 
-| Figure | PNG | SVG | PDF |
-|---|---|---|---|
-| `fig3_zeeman_splitting` | `diagrams/png/fig3_zeeman_splitting.png` | `diagrams/svg/fig3_zeeman_splitting.svg` | `diagrams/pdf/fig3_zeeman_splitting.pdf` |
-| `fig6_temperature_shift` | `diagrams/png/fig6_temperature_shift.png` | `diagrams/svg/fig6_temperature_shift.svg` | `diagrams/pdf/fig6_temperature_shift.pdf` |
-
-## Reproducibility Statement
-
-In this repository, reproducible means:
-
-- Figures are generated from version-controlled source code (no manual post-editing required).
-- The same scripts, parameters, and dependency versions should reproduce the same scientific content and visual structure.
-- Stochastic elements in Python plots use fixed seeds where implemented.
-
-Important scope note:
-
-- File bytes are not guaranteed to be identical across all systems/toolchains. Rendering backends, fonts, library versions, and embedded metadata can change binary output while preserving the same figure content.
-
-## Documentation
-
-- `docs/theory.md`: ODMR theory and NV electronic structure
-- `docs/experimental.md`: baseline setup and measurement protocol notes
-
-## Citation
-
-If you use these figures, cite the project using `CITATION.cff` or the BibTeX snippet below:
-
-```bibtex
-@software{odmr_visualized_2026,
-  author       = {Hafsa Ghannaj},
-  title        = {{ODMR Principle Visualized}},
-  year         = {2026},
-  url          = {https://github.com/hafsaghannaj/OMDR-principle},
-  license      = {CC-BY-4.0}
-}
+### Generate figures
+```bash
+cd scripts
+python -m pip install -r requirements.txt
+python generate_figures.py
 ```
 
-## Contributing
+If this fails, open an issue with:
+- OS + Python version
+- full traceback
 
-See `CONTRIBUTING.md` for contribution guidelines.
+---
 
-## License
+## Reproducibility policy (what we guarantee)
 
-- Figures and documentation are licensed under CC BY 4.0 (`LICENSE`).
-- Source code is licensed under MIT (`LICENSE_CODE`).
+- Deterministic figure generation **given pinned dependencies**.
+- Any stochastic elements (if added later) must use fixed seeds.
+
+> Exact byte-for-byte identity across OS/font stacks is **not guaranteed** unless fonts and rendering toolchain
+> are pinned (e.g., containers + font bundles). CI will enforce “script runs and produces outputs” first.
+
+---
+
+## Theory & documentation
+See `docs/`:
+- `docs/theory.md`
+- `docs/experimental.md`
+
+---
+
+## References
+1. Doherty, M.W. et al. *Physics Reports* **528**, 1–45 (2013). doi:10.1016/j.physrep.2013.02.001  
+2. Rondin, L. et al. *Rep. Prog. Phys.* **77**, 056503 (2014). doi:10.1088/0034-4885/77/5/056503  
+3. Barry, J.F. et al. *Rev. Mod. Phys.* **92**, 015004 (2020). doi:10.1103/RevModPhys.92.015004  
+4. Gruber, A. et al. *Science* **276**, 2012–2014 (1997). doi:10.1126/science.276.5321.2012  
+
+---
+
+## Citing this work
+Machine-readable metadata: `CITATION.cff`
+
+```bibtex
+@software{ghannaj_odmr_principle_visualized_2026,
+  author  = {Ghannaj, Hafsa},
+  title   = {ODMR Principle Visualized},
+  year    = {2026},
+  url     = {https://github.com/hafsaghannaj/OMDR-principle}
+}
+```

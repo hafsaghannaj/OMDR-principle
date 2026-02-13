@@ -1,228 +1,144 @@
-#!/usr/bin/env python3
-"""Generate deterministic ODMR figures for a minimal reproducible pipeline."""
+"""
+Deterministic figure generation for ODMR/NV center visualization artifacts.
+
+This script intentionally produces a small, reviewable subset of figures
+as a baseline for reproducibility and CI verification.
+"""
 
 from __future__ import annotations
 
-import sys
-import traceback
+import os
 from pathlib import Path
+from typing import Tuple
 
-import matplotlib
 import numpy as np
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DIAGRAMS_DIR = BASE_DIR / "diagrams"
-PNG_DIR = DIAGRAMS_DIR / "png"
-SVG_DIR = DIAGRAMS_DIR / "svg"
-PDF_DIR = DIAGRAMS_DIR / "pdf"
-OUTPUT_DIRS = (PNG_DIR, SVG_DIR, PDF_DIR)
-
-ZERO_FIELD_SPLITTING_GHZ = 2.87
-GYROMAGNETIC_RATIO_GHZ_PER_T = 28.025
-TEMP_COEFF_GHZ_PER_K = -74.2e-6
+ROOT = Path(__file__).resolve().parents[1]
+OUT_PNG = ROOT / "diagrams" / "png"
+OUT_SVG = ROOT / "diagrams" / "svg"
+OUT_PDF = ROOT / "diagrams" / "pdf"
 
 
-def configure_style() -> None:
-    """Set a publication-friendly plotting style."""
+def _ensure_dirs() -> None:
+    for d in (OUT_PNG, OUT_SVG, OUT_PDF):
+        d.mkdir(parents=True, exist_ok=True)
+
+
+def _save_all_formats(fig: plt.Figure, stem: str) -> None:
+    # Deterministic-ish save settings (fonts and OS rendering can still vary).
+    fig.savefig(OUT_PNG / f"{stem}.png", dpi=300, bbox_inches="tight")
+    fig.savefig(OUT_SVG / f"{stem}.svg", bbox_inches="tight")
+    fig.savefig(OUT_PDF / f"{stem}.pdf", bbox_inches="tight")
+
+
+def odmr_spectrum(
+    freq_ghz: np.ndarray,
+    centers_ghz: Tuple[float, float],
+    contrast: float = 0.03,
+    linewidth_mhz: float = 8.0,
+    baseline: float = 1.0,
+) -> np.ndarray:
+    """
+    Simple illustrative ODMR dip model: sum of two Lorentzian dips.
+    This is NOT a full physical ODMR model; it is a deterministic schematic-like plot.
+    """
+    gamma = (linewidth_mhz * 1e-3) / 2.0  # convert MHz to GHz, HWHM
+    y = np.full_like(freq_ghz, baseline, dtype=float)
+    for c in centers_ghz:
+        lor = gamma**2 / ((freq_ghz - c) ** 2 + gamma**2)
+        y -= contrast * lor
+    return y
+
+
+def fig3_zeeman_splitting() -> None:
+    """
+    Figure 3: illustrative Zeeman splitting of ODMR dips under B fields.
+    Uses fixed parameters for deterministic output.
+    """
+    # Fixed frequency axis around 2.87 GHz
+    f = np.linspace(2.80, 2.94, 1200)
+    D = 2.870  # GHz (ZFS)
+    gamma_e = 28.025  # GHz/T (electron gyromagnetic ratio)
+
+    # Fields in mT (illustrative)
+    fields_mT = [0.0, 3.0, 5.0]
+
     plt.rcParams.update(
         {
-            "font.family": "DejaVu Sans",
-            "font.size": 11,
-            "axes.linewidth": 1.1,
-            "xtick.major.width": 1.0,
-            "ytick.major.width": 1.0,
-            "figure.dpi": 300,
-            "savefig.dpi": 300,
-            "savefig.bbox": "tight",
-            "savefig.pad_inches": 0.08,
+            "figure.figsize": (6.5, 4.0),
+            "font.size": 10,
+            "axes.grid": True,
+            "grid.alpha": 0.25,
         }
     )
 
+    fig, ax = plt.subplots()
+    for BmT in fields_mT:
+        B = BmT * 1e-3  # T
+        split = gamma_e * B  # GHz (approx, illustrative)
+        y = odmr_spectrum(f, centers_ghz=(D - split, D + split), contrast=0.035, linewidth_mhz=10.0)
+        ax.plot(f, y, label=f"B = {BmT:.0f} mT")
 
-def ensure_output_dirs() -> None:
-    """Create output directories for PNG/SVG/PDF artifacts."""
-    for directory in OUTPUT_DIRS:
-        directory.mkdir(parents=True, exist_ok=True)
+    ax.set_title("Illustrative ODMR Zeeman Splitting (NV Center)")
+    ax.set_xlabel("Microwave frequency (GHz)")
+    ax.set_ylabel("Normalized fluorescence (a.u.)")
+    ax.set_xlim(f.min(), f.max())
+    ax.legend(frameon=False)
 
-
-def lorentzian_dip(freq_ghz: np.ndarray, center_ghz: float, fwhm_ghz: float, depth: float) -> np.ndarray:
-    """Return a normalized Lorentzian dip line shape."""
-    gamma = fwhm_ghz / 2.0
-    return 1.0 - depth * (gamma**2 / ((freq_ghz - center_ghz) ** 2 + gamma**2))
-
-
-def save_figure(fig: plt.Figure, stem: str) -> list[Path]:
-    """Save one figure in PNG, SVG, and PDF formats."""
-    outputs: list[Path] = []
-    targets = ((PNG_DIR, "png"), (SVG_DIR, "svg"), (PDF_DIR, "pdf"))
-
-    for directory, extension in targets:
-        output_path = directory / f"{stem}.{extension}"
-        fig.savefig(output_path)
-        outputs.append(output_path)
-
+    _save_all_formats(fig, "fig3_zeeman_splitting")
     plt.close(fig)
-    return outputs
 
 
-def fig3_zeeman_splitting() -> list[Path]:
-    """Generate Zeeman splitting ODMR spectra for three magnetic fields."""
-    freq_ghz = np.linspace(2.70, 3.04, 2400)
-    fields_mT = (0.0, 3.0, 5.0)
-    colors = ("#1f77b4", "#ff7f0e", "#d62728")
+def fig6_temperature_shift() -> None:
+    """
+    Figure 6: temperature dependence of the ZFS parameter D.
+    Uses linear coefficient dD/dT ≈ -74.2 kHz/K as an illustrative model.
+    """
+    D0 = 2.870  # GHz at reference temperature
+    T0 = 300.0  # K
+    dD_dT_khz_per_K = -74.2  # kHz/K
 
-    fig, ax = plt.subplots(figsize=(9.0, 5.3))
+    T = np.linspace(270, 330, 200)
+    dT = T - T0
+    # Convert kHz -> GHz: 1 kHz = 1e-6 GHz
+    D = D0 + (dD_dT_khz_per_K * 1e-6) * dT
 
-    for field_mT, color in zip(fields_mT, colors):
-        if field_mT == 0.0:
-            spectrum = lorentzian_dip(
-                freq_ghz,
-                center_ghz=ZERO_FIELD_SPLITTING_GHZ,
-                fwhm_ghz=0.010,
-                depth=0.16,
-            )
-        else:
-            shift_ghz = GYROMAGNETIC_RATIO_GHZ_PER_T * (field_mT * 1e-3)
-            left = lorentzian_dip(
-                freq_ghz,
-                center_ghz=ZERO_FIELD_SPLITTING_GHZ - shift_ghz,
-                fwhm_ghz=0.008,
-                depth=0.12,
-            )
-            right = lorentzian_dip(
-                freq_ghz,
-                center_ghz=ZERO_FIELD_SPLITTING_GHZ + shift_ghz,
-                fwhm_ghz=0.008,
-                depth=0.12,
-            )
-            spectrum = left * right
-
-        ax.plot(freq_ghz, spectrum, color=color, lw=2.0, label=f"B = {field_mT:g} mT")
-
-    ax.axvline(ZERO_FIELD_SPLITTING_GHZ, color="0.45", ls=":", lw=1.0)
-    ax.text(ZERO_FIELD_SPLITTING_GHZ + 0.0015, 1.003, "D = 2.87 GHz", color="0.35", fontsize=9)
-
-    ax.set_title("Zeeman Splitting in ODMR Spectra", fontweight="bold")
-    ax.set_xlabel("Microwave Frequency (GHz)")
-    ax.set_ylabel("Normalized Fluorescence")
-    ax.set_ylim(0.82, 1.02)
-    ax.grid(alpha=0.25)
-    ax.legend(framealpha=0.9)
-
-    formula_box = "$\\Delta f = 2\\gamma B$\n$\\gamma = 28.025$ GHz/T"
-    ax.text(
-        0.02,
-        0.03,
-        formula_box,
-        transform=ax.transAxes,
-        fontsize=10,
-        va="bottom",
-        bbox={"boxstyle": "round", "facecolor": "#f9fafb", "edgecolor": "0.5"},
+    plt.rcParams.update(
+        {
+            "figure.figsize": (6.5, 4.0),
+            "font.size": 10,
+            "axes.grid": True,
+            "grid.alpha": 0.25,
+        }
     )
 
-    return save_figure(fig, "fig3_zeeman_splitting")
-
-
-def fig6_temperature_shift() -> list[Path]:
-    """Generate ODMR temperature shift spectra with dD/dT labeling."""
-    freq_ghz = np.linspace(2.84, 2.89, 2400)
-    temperatures_k = (300, 325, 350, 400)
-    colors = ("#1f77b4", "#2ca02c", "#ff7f0e", "#d62728")
-
-    fig, ax = plt.subplots(figsize=(9.0, 5.3))
-
-    centers: list[float] = []
-    for temp_k, color in zip(temperatures_k, colors):
-        delta_temp = temp_k - 300
-        center = ZERO_FIELD_SPLITTING_GHZ + TEMP_COEFF_GHZ_PER_K * delta_temp
-        centers.append(center)
-
-        signal = lorentzian_dip(
-            freq_ghz,
-            center_ghz=center,
-            fwhm_ghz=0.006,
-            depth=0.16,
-        )
-
-        ax.plot(freq_ghz, signal, color=color, lw=2.0, label=f"T = {temp_k} K")
-        ax.axvline(center, color=color, ls=":", lw=1.0, alpha=0.45)
-
-    center_300 = centers[0]
-    center_400 = centers[-1]
-    shift_mhz = (center_400 - center_300) * 1e3
-
+    fig, ax = plt.subplots()
+    ax.plot(T, D)
+    ax.set_title("Temperature Dependence of NV ZFS Parameter D (Illustrative)")
+    ax.set_xlabel("Temperature (K)")
+    ax.set_ylabel("D (GHz)")
     ax.annotate(
-        "",
-        xy=(center_400, 0.885),
-        xytext=(center_300, 0.885),
-        arrowprops={"arrowstyle": "<->", "lw": 1.8, "color": "#7e22ce"},
-    )
-    ax.text(
-        (center_300 + center_400) / 2,
-        0.892,
-        f"{shift_mhz:.2f} MHz over 100 K",
-        ha="center",
-        fontsize=9,
-        color="#7e22ce",
-        fontweight="bold",
+        "dD/dT ≈ -74.2 kHz/K",
+        xy=(305, D0 + (dD_dT_khz_per_K * 1e-6) * (305 - T0)),
+        xytext=(292, D.min() + 0.0002),
+        arrowprops={"arrowstyle": "->"},
     )
 
-    ax.set_title("ODMR Temperature Dependence", fontweight="bold")
-    ax.set_xlabel("Microwave Frequency (GHz)")
-    ax.set_ylabel("Normalized Fluorescence")
-    ax.set_ylim(0.82, 1.02)
-    ax.grid(alpha=0.25)
-    ax.legend(framealpha=0.9)
-
-    ax.text(
-        0.02,
-        0.03,
-        "$dD/dT \\approx -74.2$ kHz/K",
-        transform=ax.transAxes,
-        fontsize=10,
-        va="bottom",
-        bbox={"boxstyle": "round", "facecolor": "#f9fafb", "edgecolor": "0.5"},
-    )
-
-    return save_figure(fig, "fig6_temperature_shift")
+    _save_all_formats(fig, "fig6_temperature_shift")
+    plt.close(fig)
 
 
-def main() -> int:
-    """Run the minimal deterministic figure generation pipeline."""
-    try:
-        ensure_output_dirs()
-        configure_style()
-
-        generators = (
-            ("fig3_zeeman_splitting", fig3_zeeman_splitting),
-            ("fig6_temperature_shift", fig6_temperature_shift),
-        )
-
-        print("Generating deterministic ODMR figures (v0.1)...")
-        produced_files: list[Path] = []
-
-        for name, generator in generators:
-            print(f"  - {name}")
-            produced_files.extend(generator())
-
-        print("\nGenerated files:")
-        for output_file in produced_files:
-            print(f"  {output_file.relative_to(BASE_DIR)}")
-
-        print("\nOutputs written to:")
-        for directory in OUTPUT_DIRS:
-            print(f"  {directory.resolve()}")
-
-        return 0
-    except Exception as exc:  # pragma: no cover - runtime guard
-        print(f"ERROR: figure generation failed: {exc}", file=sys.stderr)
-        traceback.print_exc()
-        return 1
+def main() -> None:
+    _ensure_dirs()
+    fig3_zeeman_splitting()
+    fig6_temperature_shift()
+    print("Generated figures:")
+    print(f"  PNG: {OUT_PNG}")
+    print(f"  SVG: {OUT_SVG}")
+    print(f"  PDF: {OUT_PDF}")
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()

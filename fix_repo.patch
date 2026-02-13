@@ -1,0 +1,297 @@
+diff --git a/README.md b/README.md
+index 0cbe0aa..1111111 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1,140 @@
+-<old content replaced>
++# ODMR Principle Visualized
++
++Publication-ready diagrams and reproducible figure generation for **Optically Detected Magnetic Resonance (ODMR)**
++in Nitrogen-Vacancy (NV) centers in diamond.
++
++**Repository:** https://github.com/hafsaghannaj/OMDR-principle
++
++---
++
++## What this repository is (and is not)
++
++- **Is:** a figure/diagram artifact repository intended for papers, theses, lecture slides, and lab docs.
++- **Is not:** a full ODMR analysis package or experimental control stack.
++
++---
++
++## Figure Gallery (generated programmatically)
++
++| Figure | Filename | Description |
++|:------:|----------|-------------|
++| 3 | `fig3_zeeman_splitting` | ODMR spectra under applied magnetic fields (0, 3, 5 mT), showing Zeeman-split resonance dips |
++| 6 | `fig6_temperature_shift` | Temperature dependence of the ODMR zero-field splitting parameter D (illustrative linear model) |
++
++### Output formats
++Each figure is produced as:
++- **PNG** (300 DPI)
++- **SVG**
++- **PDF**
++
++Outputs are written to:
++- `diagrams/png/`
++- `diagrams/svg/`
++- `diagrams/pdf/`
++
++---
++
++## Quick Start
++
++### Prerequisites
++- Python **3.9+**
++
++### Generate figures
++```bash
++cd scripts
++python -m pip install -r requirements.txt
++python generate_figures.py
++```
++
++If this fails, open an issue with:
++- OS + Python version
++- full traceback
++
++---
++
++## Reproducibility policy (what we guarantee)
++
++- Deterministic figure generation **given pinned dependencies**.
++- Any stochastic elements (if added later) must use fixed seeds.
++
++> Exact byte-for-byte identity across OS/font stacks is **not guaranteed** unless fonts and rendering toolchain
++> are pinned (e.g., containers + font bundles). CI will enforce “script runs and produces outputs” first.
++
++---
++
++## Theory & documentation
++See `docs/`:
++- `docs/theory.md`
++- `docs/experimental.md`
++
++---
++
++## References
++1. Doherty, M.W. et al. *Physics Reports* **528**, 1–45 (2013). doi:10.1016/j.physrep.2013.02.001  
++2. Rondin, L. et al. *Rep. Prog. Phys.* **77**, 056503 (2014). doi:10.1088/0034-4885/77/5/056503  
++3. Barry, J.F. et al. *Rev. Mod. Phys.* **92**, 015004 (2020). doi:10.1103/RevModPhys.92.015004  
++4. Gruber, A. et al. *Science* **276**, 2012–2014 (1997). doi:10.1126/science.276.5321.2012  
++
++---
++
++## Citing this work
++Machine-readable metadata: `CITATION.cff`
++
++```bibtex
++@software{ghannaj_odmr_principle_visualized_2026,
++  author  = {Ghannaj, Hafsa},
++  title   = {ODMR Principle Visualized},
++  year    = {2026},
++  url     = {https://github.com/hafsaghannaj/OMDR-principle}
++}
++```
+diff --git a/CITATION.cff b/CITATION.cff
+index 2222222..3333333 100644
+--- a/CITATION.cff
++++ b/CITATION.cff
+@@ -1 +1,55 @@
+-<old malformed content replaced>
++cff-version: 1.2.0
++message: "If you use these diagrams or code, please cite as below."
++type: software
++title: "ODMR Principle Visualized"
++version: "0.1.0"
++date-released: "2026-02-12"
++license: "CC-BY-4.0"
++repository-code: "https://github.com/hafsaghannaj/OMDR-principle"
++url: "https://github.com/hafsaghannaj/OMDR-principle"
++authors:
++  - family-names: "Ghannaj"
++    given-names: "Hafsa"
++
++keywords:
++  - ODMR
++  - nitrogen-vacancy center
++  - quantum sensing
++  - diamond
++  - magnetometry
++  - spin physics
++  - scientific visualization
++  - reproducible figures
++
++abstract: >
++  Publication-ready diagrams and reproducible figure-generation workflows for
++  Optically Detected Magnetic Resonance (ODMR) in Nitrogen-Vacancy (NV) centers
++  in diamond.
++
++preferred-citation:
++  type: software
++  authors:
++    - family-names: "Ghannaj"
++      given-names: "Hafsa"
++  title: "ODMR Principle Visualized"
++  year: 2026
++  url: "https://github.com/hafsaghannaj/OMDR-principle"
+diff --git a/scripts/requirements.txt b/scripts/requirements.txt
+index e69de29..4444444 100644
+--- a/scripts/requirements.txt
++++ b/scripts/requirements.txt
+@@ -0,0 +1,3 @@
++numpy>=1.24
++matplotlib>=3.7
++scipy>=1.10
+diff --git a/scripts/generate_figures.py b/scripts/generate_figures.py
+index 5555555..6666666 100644
+--- a/scripts/generate_figures.py
++++ b/scripts/generate_figures.py
+@@ -1,2 +1,194 @@
+-# stub
+-# TODO
++"""
++Deterministic figure generation for ODMR/NV center visualization artifacts.
++
++This script intentionally produces a small, reviewable subset of figures
++as a baseline for reproducibility and CI verification.
++"""
++
++from __future__ import annotations
++
++import os
++from pathlib import Path
++from typing import Tuple
++
++import numpy as np
++import matplotlib.pyplot as plt
++
++
++ROOT = Path(__file__).resolve().parents[1]
++OUT_PNG = ROOT / "diagrams" / "png"
++OUT_SVG = ROOT / "diagrams" / "svg"
++OUT_PDF = ROOT / "diagrams" / "pdf"
++
++
++def _ensure_dirs() -> None:
++    for d in (OUT_PNG, OUT_SVG, OUT_PDF):
++        d.mkdir(parents=True, exist_ok=True)
++
++
++def _save_all_formats(fig: plt.Figure, stem: str) -> None:
++    # Deterministic-ish save settings (fonts and OS rendering can still vary).
++    fig.savefig(OUT_PNG / f"{stem}.png", dpi=300, bbox_inches="tight")
++    fig.savefig(OUT_SVG / f"{stem}.svg", bbox_inches="tight")
++    fig.savefig(OUT_PDF / f"{stem}.pdf", bbox_inches="tight")
++
++
++def odmr_spectrum(
++    freq_ghz: np.ndarray,
++    centers_ghz: Tuple[float, float],
++    contrast: float = 0.03,
++    linewidth_mhz: float = 8.0,
++    baseline: float = 1.0,
++) -> np.ndarray:
++    """
++    Simple illustrative ODMR dip model: sum of two Lorentzian dips.
++    This is NOT a full physical ODMR model; it is a deterministic schematic-like plot.
++    """
++    gamma = (linewidth_mhz * 1e-3) / 2.0  # convert MHz to GHz, HWHM
++    y = np.full_like(freq_ghz, baseline, dtype=float)
++    for c in centers_ghz:
++        lor = gamma**2 / ((freq_ghz - c) ** 2 + gamma**2)
++        y -= contrast * lor
++    return y
++
++
++def fig3_zeeman_splitting() -> None:
++    """
++    Figure 3: illustrative Zeeman splitting of ODMR dips under B fields.
++    Uses fixed parameters for deterministic output.
++    """
++    # Fixed frequency axis around 2.87 GHz
++    f = np.linspace(2.80, 2.94, 1200)
++    D = 2.870  # GHz (ZFS)
++    gamma_e = 28.025  # GHz/T (electron gyromagnetic ratio)
++
++    # Fields in mT (illustrative)
++    fields_mT = [0.0, 3.0, 5.0]
++
++    plt.rcParams.update(
++        {
++            "figure.figsize": (6.5, 4.0),
++            "font.size": 10,
++            "axes.grid": True,
++            "grid.alpha": 0.25,
++        }
++    )
++
++    fig, ax = plt.subplots()
++    for BmT in fields_mT:
++        B = BmT * 1e-3  # T
++        split = gamma_e * B  # GHz (approx, illustrative)
++        y = odmr_spectrum(f, centers_ghz=(D - split, D + split), contrast=0.035, linewidth_mhz=10.0)
++        ax.plot(f, y, label=f"B = {BmT:.0f} mT")
++
++    ax.set_title("Illustrative ODMR Zeeman Splitting (NV Center)")
++    ax.set_xlabel("Microwave frequency (GHz)")
++    ax.set_ylabel("Normalized fluorescence (a.u.)")
++    ax.set_xlim(f.min(), f.max())
++    ax.legend(frameon=False)
++
++    _save_all_formats(fig, "fig3_zeeman_splitting")
++    plt.close(fig)
++
++
++def fig6_temperature_shift() -> None:
++    """
++    Figure 6: temperature dependence of the ZFS parameter D.
++    Uses linear coefficient dD/dT ≈ -74.2 kHz/K as an illustrative model.
++    """
++    D0 = 2.870  # GHz at reference temperature
++    T0 = 300.0  # K
++    dD_dT_khz_per_K = -74.2  # kHz/K
++
++    T = np.linspace(270, 330, 200)
++    dT = T - T0
++    # Convert kHz -> GHz: 1 kHz = 1e-6 GHz
++    D = D0 + (dD_dT_khz_per_K * 1e-6) * dT
++
++    plt.rcParams.update(
++        {
++            "figure.figsize": (6.5, 4.0),
++            "font.size": 10,
++            "axes.grid": True,
++            "grid.alpha": 0.25,
++        }
++    )
++
++    fig, ax = plt.subplots()
++    ax.plot(T, D)
++    ax.set_title("Temperature Dependence of NV ZFS Parameter D (Illustrative)")
++    ax.set_xlabel("Temperature (K)")
++    ax.set_ylabel("D (GHz)")
++    ax.annotate(
++        "dD/dT ≈ -74.2 kHz/K",
++        xy=(305, D0 + (dD_dT_khz_per_K * 1e-6) * (305 - T0)),
++        xytext=(292, D.min() + 0.0002),
++        arrowprops={"arrowstyle": "->"},
++    )
++
++    _save_all_formats(fig, "fig6_temperature_shift")
++    plt.close(fig)
++
++
++def main() -> None:
++    _ensure_dirs()
++    fig3_zeeman_splitting()
++    fig6_temperature_shift()
++    print("Generated figures:")
++    print(f"  PNG: {OUT_PNG}")
++    print(f"  SVG: {OUT_SVG}")
++    print(f"  PDF: {OUT_PDF}")
++
++
++if __name__ == "__main__":
++    main()
