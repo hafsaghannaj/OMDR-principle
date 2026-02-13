@@ -14,16 +14,12 @@ in Nitrogen-Vacancy (NV) centers in diamond.
 
 ---
 
-## Figure Gallery
+## Figure Gallery (generated programmatically)
 
-| Figure | Filename | Source | Description |
-|:------:|----------|--------|-------------|
-| 1 | `fig1_energy_levels` | TikZ | NV center energy level diagram |
-| 2 | `fig2_odmr_workflow` | TikZ | ODMR measurement workflow schematic |
-| 3 | `fig3_zeeman_splitting` | Python | ODMR spectra under applied magnetic fields (0, 3, 5 mT), showing Zeeman-split resonance dips |
-| 4 | `fig4_fluorescence_contrast` | TikZ | Fluorescence contrast mechanism |
-| 5 | `fig5_nv_crystal_orientations` | TikZ | NV axis orientations in diamond lattice |
-| 6 | `fig6_temperature_shift` | Python | Temperature dependence of the ODMR zero-field splitting parameter D (illustrative linear model) |
+| Figure | Filename | Generator | Description |
+|:--:|--|--|--|
+| 3 | `fig3_zeeman_splitting` | Python | Illustrative ODMR dips under B = 0, 3, 5 mT (Lorentzian dip model) |
+| 6 | `fig6_temperature_shift` | Python | Illustrative linear shift of ZFS parameter D with temperature (dD/dT) |
 
 ### Output formats
 
