@@ -3,7 +3,7 @@
 Publication-ready diagrams and reproducible figure generation for **Optically Detected Magnetic Resonance (ODMR)**
 in Nitrogen-Vacancy (NV) centers in diamond.
 
-**Repository:** https://github.com/hafsaghannaj/OMDR-principle
+**Repository:** <https://github.com/hafsaghannaj/OMDR-principle>
 
 ---
 
@@ -14,55 +14,78 @@ in Nitrogen-Vacancy (NV) centers in diamond.
 
 ---
 
-## Figure Gallery (generated programmatically)
+## Figure Gallery
 
-| Figure | Filename | Description |
-|:------:|----------|-------------|
-| 3 | `fig3_zeeman_splitting` | ODMR spectra under applied magnetic fields (0, 3, 5 mT), showing Zeeman-split resonance dips |
-| 6 | `fig6_temperature_shift` | Temperature dependence of the ODMR zero-field splitting parameter D (illustrative linear model) |
+| Figure | Filename | Source | Description |
+|:------:|----------|--------|-------------|
+| 1 | `fig1_energy_levels` | TikZ | NV center energy level diagram |
+| 2 | `fig2_odmr_workflow` | TikZ | ODMR measurement workflow schematic |
+| 3 | `fig3_zeeman_splitting` | Python | ODMR spectra under applied magnetic fields (0, 3, 5 mT), showing Zeeman-split resonance dips |
+| 4 | `fig4_fluorescence_contrast` | TikZ | Fluorescence contrast mechanism |
+| 5 | `fig5_nv_crystal_orientations` | TikZ | NV axis orientations in diamond lattice |
+| 6 | `fig6_temperature_shift` | Python | Temperature dependence of the ODMR zero-field splitting parameter D (illustrative linear model) |
 
 ### Output formats
+
 Each figure is produced as:
 - **PNG** (300 DPI)
 - **SVG**
 - **PDF**
 
-Outputs are written to:
-- `diagrams/png/`
-- `diagrams/svg/`
-- `diagrams/pdf/`
+Outputs are written to `diagrams/png/`, `diagrams/svg/`, `diagrams/pdf/`.
 
 ---
 
 ## Quick Start
 
 ### Prerequisites
-- Python **3.9+**
 
-### Generate figures
+- Python **3.9+**
+- For TikZ figures: a TeX distribution (`pdflatex`), plus optionally ImageMagick and `pdf2svg`
+
+### Generate Python figures (fig 3, fig 6)
+
 ```bash
-cd scripts
-python -m pip install -r requirements.txt
-python generate_figures.py
+pip install -r scripts/requirements.txt
+python scripts/generate_figures.py
 ```
 
-If this fails, open an issue with:
-- OS + Python version
-- full traceback
+### Compile TikZ figures (fig 1, 2, 4, 5)
+
+```bash
+python scripts/tikz2png.py
+```
+
+Requires `pdflatex`. See the script for optional PNG/SVG conversion dependencies.
+
+If anything fails, open an issue with your OS, Python version, and full traceback.
 
 ---
 
-## Reproducibility policy (what we guarantee)
+## Reproducibility
 
-- Deterministic figure generation **given pinned dependencies**.
-- Any stochastic elements (if added later) must use fixed seeds.
+- Deterministic figure generation **within a pinned dependency environment**.
+- All stochastic elements (if added later) must use fixed seeds.
 
-> Exact byte-for-byte identity across OS/font stacks is **not guaranteed** unless fonts and rendering toolchain
-> are pinned (e.g., containers + font bundles). CI will enforce “script runs and produces outputs” first.
+> Exact byte-for-byte identity across OS/font stacks is **not guaranteed** unless fonts and
+> the rendering toolchain are also pinned (e.g., via containers and font bundles).
+> CI enforces that the Python pipeline runs and produces outputs on every push.
 
 ---
 
-## Theory & documentation
+## CI
+
+GitHub Actions workflow (`.github/workflows/reproducibility.yml`) runs on every push and PR:
+1. Installs Python 3.11 + pinned dependencies
+2. Runs `generate_figures.py`
+3. Uploads `diagrams/` as a build artifact
+
+TikZ compilation is not yet in CI (requires a TeX distribution in the runner).
+
+---
+
+## Theory & Documentation
+
 See `docs/`:
 - `docs/theory.md`
 - `docs/experimental.md`
@@ -70,15 +93,17 @@ See `docs/`:
 ---
 
 ## References
-1. Doherty, M.W. et al. *Physics Reports* **528**, 1–45 (2013). doi:10.1016/j.physrep.2013.02.001  
-2. Rondin, L. et al. *Rep. Prog. Phys.* **77**, 056503 (2014). doi:10.1088/0034-4885/77/5/056503  
-3. Barry, J.F. et al. *Rev. Mod. Phys.* **92**, 015004 (2020). doi:10.1103/RevModPhys.92.015004  
-4. Gruber, A. et al. *Science* **276**, 2012–2014 (1997). doi:10.1126/science.276.5321.2012  
+
+1. Doherty, M.W. et al. *Physics Reports* **528**, 1–45 (2013). doi:10.1016/j.physrep.2013.02.001
+2. Rondin, L. et al. *Rep. Prog. Phys.* **77**, 056503 (2014). doi:10.1088/0034-4885/77/5/056503
+3. Barry, J.F. et al. *Rev. Mod. Phys.* **92**, 015004 (2020). doi:10.1103/RevModPhys.92.015004
+4. Gruber, A. et al. *Science* **276**, 2012–2014 (1997). doi:10.1126/science.276.5321.2012
 
 ---
 
 ## Citing this work
-Machine-readable metadata: `CITATION.cff`
+
+Machine-readable metadata: [`CITATION.cff`](CITATION.cff)
 
 ```bibtex
 @software{ghannaj_odmr_principle_visualized_2026,
@@ -88,3 +113,10 @@ Machine-readable metadata: `CITATION.cff`
   url     = {https://github.com/hafsaghannaj/OMDR-principle}
 }
 ```
+
+---
+
+## License
+
+- **Code** (scripts, workflows): MIT — see [`LICENSE_CODE`](LICENSE_CODE)
+- **Figures & diagrams**: CC-BY-4.0 — see [`LICENSE`](LICENSE)
