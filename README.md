@@ -84,8 +84,8 @@ brew install poppler
 
 ## Reproducibility
 
-This repository provides a **Dockerfile** that pins the entire toolchain (Ubuntu 22.04, TeX Live, Python 3.11,
-and all dependencies) to ensure byte-for-byte identical figure output across any machine.
+This repository provides a **Dockerfile** that pins the OS, TeX Live, Python, and all dependencies
+to maximize reproducibility. The Docker build sets `SOURCE_DATE_EPOCH` for deterministic PDF timestamps.
 
 For local (non-Docker) runs, outputs are deterministic within a pinned dependency environment but may
 vary across different OS/font stacks.
@@ -105,6 +105,7 @@ GitHub Actions workflow (`.github/workflows/reproducibility.yml`) runs on every 
 ## Theory & Documentation
 
 See `docs/`:
+
 - `docs/theory.md`
 - `docs/experimental.md`
 

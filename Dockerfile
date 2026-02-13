@@ -34,6 +34,9 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY scripts/requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
+# Deterministic PDF timestamps (avoids non-reproducible metadata)
+ENV SOURCE_DATE_EPOCH=0
+
 # Set working directory
 WORKDIR /workspace
 
