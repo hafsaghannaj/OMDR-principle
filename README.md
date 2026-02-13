@@ -1,5 +1,7 @@
 # ODMR Principle Visualized
 
+[![Reproducible Build](https://github.com/hafsaghannaj/ODMR-principle/actions/workflows/reproducibility.yml/badge.svg)](https://github.com/hafsaghannaj/ODMR-principle/actions/workflows/reproducibility.yml)
+
 Publication-ready diagrams and reproducible figure generation for **Optically Detected Magnetic Resonance (ODMR)**
 in Nitrogen-Vacancy (NV) centers in diamond.
 
