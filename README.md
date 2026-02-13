@@ -37,7 +37,6 @@ Outputs are written to `diagrams/png/`, `diagrams/svg/`, `diagrams/pdf/`.
 ### Prerequisites
 
 - Python **3.9+**
-- For TikZ figures: a TeX distribution (`pdflatex`), plus optionally ImageMagick and `pdf2svg`
 
 ### Generate Python figures (fig 3, fig 6)
 
@@ -46,15 +45,15 @@ pip install -r scripts/requirements.txt
 python scripts/generate_figures.py
 ```
 
-### Compile TikZ figures (fig 1, 2, 4, 5)
-
-```bash
-python scripts/tikz2png.py
-```
-
-Requires `pdflatex`. See the script for optional PNG/SVG conversion dependencies.
-
 If anything fails, open an issue with your OS, Python version, and full traceback.
+
+---
+
+## TikZ workflow (planned / experimental)
+
+A TikZ-based pipeline (`scripts/tikz2png.py`) exists but is **not yet verified**.
+It requires a TeX distribution (`pdflatex`), plus optionally ImageMagick and `pdf2svg`.
+Use at your own risk — contributions welcome.
 
 ---
 
