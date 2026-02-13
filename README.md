@@ -9,15 +9,11 @@ Repository URL: https://github.com/hafsaghannaj/OMDR-principle
 
 ## What This Repository Contains
 
-This project generates six ODMR/NV figures directly from source code. The figures are intended for papers, theses, lab onboarding docs, and teaching material.
+Current v0.1 generates two ODMR/NV figures directly from source code. The figures are intended for papers, theses, lab onboarding docs, and teaching material.
 
 Programmatically generated figures:
 
-- `fig1_energy_levels`: NV- energy-level structure and optical/spin transitions
-- `fig2_odmr_workflow`: four-step ODMR measurement cycle
 - `fig3_zeeman_splitting`: ODMR dip splitting under applied magnetic field
-- `fig4_fluorescence_contrast`: simulated bright/dark fluorescence readout trace
-- `fig5_nv_crystal_orientations`: NV axis geometry and 8-dip spectrum context
 - `fig6_temperature_shift`: resonance shift versus temperature
 
 ## Repository Layout
@@ -62,6 +58,15 @@ Outputs are written to:
 - `diagrams/pdf/`
 
 Current supported generation workflow is Python-only via `scripts/generate_figures.py`.
+
+## Expected Outputs
+
+After running `python scripts/generate_figures.py`, the following files should exist:
+
+| Figure | PNG | SVG | PDF |
+|---|---|---|---|
+| `fig3_zeeman_splitting` | `diagrams/png/fig3_zeeman_splitting.png` | `diagrams/svg/fig3_zeeman_splitting.svg` | `diagrams/pdf/fig3_zeeman_splitting.pdf` |
+| `fig6_temperature_shift` | `diagrams/png/fig6_temperature_shift.png` | `diagrams/svg/fig6_temperature_shift.svg` | `diagrams/pdf/fig6_temperature_shift.pdf` |
 
 ## Reproducibility Statement
 
