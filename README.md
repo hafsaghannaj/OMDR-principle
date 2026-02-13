@@ -80,11 +80,12 @@ toolchain (including fonts) is containerized and pinned.
 ## CI
 
 GitHub Actions workflow (`.github/workflows/reproducibility.yml`) runs on every push and PR:
-1. Installs Python 3.11 + pinned dependencies
-2. Runs `generate_figures.py`
-3. Uploads `diagrams/` as a build artifact
 
-TikZ compilation is not yet in CI (requires a TeX distribution in the runner).
+1. Installs Python 3.11 + pinned dependencies
+2. Runs `generate_figures.py` (Python figures)
+3. Installs TeX + Poppler
+4. Runs `tikz2png.py` (TikZ figures)
+5. Uploads `diagrams/` as a build artifact
 
 ---
 
