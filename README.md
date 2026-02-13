@@ -34,11 +34,18 @@ Outputs are written to `diagrams/png/`, `diagrams/svg/`, `diagrams/pdf/`.
 
 ## Quick Start
 
-### Prerequisites
+### Option 1: Docker (recommended — fully reproducible)
 
-- Python **3.9+**
+```bash
+docker build -t odmr-viz .
+docker run --rm -v $(pwd):/workspace odmr-viz
+```
 
-### Generate Python figures (fig 3, fig 6)
+This generates all figures (Python + TikZ) in an identical environment every time.
+
+### Option 2: Local Python (figures 3 and 6 only)
+
+Prerequisites: Python **3.9+**
 
 ```bash
 pip install -r scripts/requirements.txt
@@ -71,9 +78,11 @@ brew install poppler
 
 ## Reproducibility
 
-This repository aims for deterministic figure generation **within a pinned dependency environment**.
-Exact byte-for-byte identical outputs across different OS/font stacks are **not guaranteed** unless the rendering
-toolchain (including fonts) is containerized and pinned.
+This repository provides a **Dockerfile** that pins the entire toolchain (Ubuntu 22.04, TeX Live, Python 3.11,
+and all dependencies) to ensure byte-for-byte identical figure output across any machine.
+
+For local (non-Docker) runs, outputs are deterministic within a pinned dependency environment but may
+vary across different OS/font stacks.
 
 ---
 
@@ -81,11 +90,9 @@ toolchain (including fonts) is containerized and pinned.
 
 GitHub Actions workflow (`.github/workflows/reproducibility.yml`) runs on every push and PR:
 
-1. Installs Python 3.11 + pinned dependencies
-2. Runs `generate_figures.py` (Python figures)
-3. Installs TeX + Poppler
-4. Runs `tikz2png.py` (TikZ figures)
-5. Uploads `diagrams/` as a build artifact
+1. Builds the Docker image (pins entire toolchain)
+2. Generates all figures (Python + TikZ) inside the container
+3. Uploads `diagrams/` as a build artifact
 
 ---
 

@@ -1,44 +1,25 @@
-name: Reproducibility
+name: Reproducible Build
 
 on:
   push:
   pull_request:
 
 jobs:
-  generate-figures:
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+      - name: Build Docker image
+        run: docker build -t odmr-viz .
 
-      - name: Install Python dependencies
+      - name: Generate all figures in container
         run: |
-          python -m pip install --upgrade pip
-          pip install -r scripts/requirements.txt
-
-      - name: Generate Python figures
-        env:
-          MPLBACKEND: Agg
-        run: python scripts/generate_figures.py
-
-      - name: Install TeX + Poppler for TikZ compilation
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            texlive-latex-base \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-pictures \
-            poppler-utils
-
-      - name: Compile TikZ figures
-        run: python scripts/tikz2png.py
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            odmr-viz
 
       - name: Upload diagrams artifact
         uses: actions/upload-artifact@v4
