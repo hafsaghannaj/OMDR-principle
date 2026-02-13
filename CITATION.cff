@@ -5,7 +5,6 @@ title: "ODMR Principle Visualized"
 authors:
   - family-names: "Ghannaj"
     given-names: "Hafsa"
-    orcid: ""
 version: "1.0.0"
 date-released: "2026-02-12"
 license: "CC-BY-4.0"
@@ -26,8 +25,8 @@ abstract: >-
   Nitrogen-Vacancy centers in diamond. Includes energy level
   diagrams, measurement cycle workflows, Zeeman splitting spectra,
   fluorescence contrast simulations, crystal orientation maps, and
-  temperature dependence curves. All figures are generated
-  deterministically from Python and TikZ source code.
+  temperature dependence curves. All figures are generated from
+  Python and TikZ source code.
 references:
   - type: article
     authors:
@@ -35,9 +34,9 @@ references:
         given-names: "M. W."
     title: "The nitrogen-vacancy colour centre in diamond"
     journal: "Physics Reports"
-    volume: 528
-    start: 1
-    end: 45
+    volume: "528"
+    start: "1"
+    end: "45"
     year: 2013
     doi: "10.1016/j.physrep.2013.02.001"
   - type: article
@@ -46,7 +45,7 @@ references:
         given-names: "L."
     title: "Magnetometry with nitrogen-vacancy defects in diamond"
     journal: "Reports on Progress in Physics"
-    volume: 77
-    start: 056503
+    volume: "77"
+    start: "056503"
     year: 2014
     doi: "10.1088/0034-4885/77/5/056503"
