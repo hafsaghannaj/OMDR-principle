@@ -2,7 +2,6 @@
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
-[![LaTeX](https://img.shields.io/badge/LaTeX-TikZ-orange.svg)](https://www.ctan.org/pkg/pgf)
 
 Publication-ready diagrams and reproducible figure-generation workflows for Optically Detected Magnetic Resonance (ODMR) in nitrogen-vacancy (NV) centers in diamond.
 
@@ -30,12 +29,11 @@ Programmatically generated figures:
 │   ├── svg/            # Generated SVG outputs
 │   ├── pdf/            # Generated PDF outputs
 │   └── source/
-│       ├── tikz/       # TikZ source files
+│       ├── tikz/       # TikZ source files (not in active build pipeline)
 │       └── drawio/     # Draw.io source files
 ├── docs/               # Theory and experimental notes
 ├── scripts/
 │   ├── generate_figures.py
-│   ├── tikz2png.py
 │   └── requirements.txt
 ├── CITATION.cff
 └── README.md
@@ -63,17 +61,7 @@ Outputs are written to:
 - `diagrams/svg/`
 - `diagrams/pdf/`
 
-### 3) Compile TikZ figures (optional)
-
-```bash
-python scripts/tikz2png.py
-```
-
-Requirements for this optional step:
-
-- `pdflatex` (required)
-- `magick` or `convert` (optional PNG conversion)
-- `pdf2svg` (optional SVG conversion)
+Current supported generation workflow is Python-only via `scripts/generate_figures.py`.
 
 ## Reproducibility Statement
 
