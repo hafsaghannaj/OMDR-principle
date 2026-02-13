@@ -49,11 +49,23 @@ If anything fails, open an issue with your OS, Python version, and full tracebac
 
 ---
 
-## TikZ workflow (planned / experimental)
+## TikZ workflow
 
-A TikZ-based pipeline (`scripts/tikz2png.py`) exists but is **not yet verified**.
-It requires a TeX distribution (`pdflatex`), plus optionally ImageMagick and `pdf2svg`.
-Use at your own risk — contributions welcome.
+Compile TikZ `.tex` sources from `diagrams/source/tikz/` into PDF, PNG, and SVG:
+
+```bash
+python scripts/tikz2png.py
+```
+
+Requires `pdflatex` (TeX distribution) and `pdftocairo` (Poppler) for PNG/SVG conversion.
+
+**macOS setup:**
+
+```bash
+brew install --cask basictex
+export PATH="/Library/TeX/texbin:$PATH"
+brew install poppler
+```
 
 ---
 
