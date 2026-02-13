@@ -3,10 +3,11 @@ message: "If you use these diagrams or code, please cite as below."
 type: software
 title: "ODMR Principle Visualized"
 version: "0.1.0"
-date-released: "2026-02-12"
+date-released: "2026-02-13"
+repository-code: "https://github.com/hafsaghannaj/ODMR-principle"
+url: "https://github.com/hafsaghannaj/ODMR-principle"
 license: "CC-BY-4.0"
-repository-code: "https://github.com/hafsaghannaj/OMDR-principle"
-url: "https://github.com/hafsaghannaj/OMDR-principle"
+
 authors:
   - family-names: "Ghannaj"
     given-names: "Hafsa"
@@ -14,17 +15,12 @@ authors:
 keywords:
   - ODMR
   - nitrogen-vacancy center
+  - NV center
   - quantum sensing
   - diamond
   - magnetometry
-  - spin physics
-  - scientific visualization
   - reproducible figures
-
-abstract: >
-  Publication-ready diagrams and reproducible figure-generation workflows for
-  Optically Detected Magnetic Resonance (ODMR) in Nitrogen-Vacancy (NV) centers
-  in diamond.
+  - scientific visualization
 
 preferred-citation:
   type: software
@@ -32,7 +28,5 @@ preferred-citation:
     - family-names: "Ghannaj"
       given-names: "Hafsa"
   title: "ODMR Principle Visualized"
-  version: "0.1.0"
   year: 2026
-  repository-code: "https://github.com/hafsaghannaj/OMDR-principle"
-  url: "https://github.com/hafsaghannaj/OMDR-principle"
+  url: "https://github.com/hafsaghannaj/ODMR-principle"
