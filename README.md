@@ -60,12 +60,9 @@ If anything fails, open an issue with your OS, Python version, and full tracebac
 
 ## Reproducibility
 
-- Deterministic figure generation **within a pinned dependency environment**.
-- All stochastic elements (if added later) must use fixed seeds.
-
-> Exact byte-for-byte identity across OS/font stacks is **not guaranteed** unless fonts and
-> the rendering toolchain are also pinned (e.g., via containers and font bundles).
-> CI enforces that the Python pipeline runs and produces outputs on every push.
+This repository aims for deterministic figure generation **within a pinned dependency environment**.
+Exact byte-for-byte identical outputs across different OS/font stacks are **not guaranteed** unless the rendering
+toolchain (including fonts) is containerized and pinned.
 
 ---
 
